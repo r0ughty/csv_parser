@@ -1,66 +1,56 @@
 #define _CRT_SECURE_NO_WARNINGS
-#include "util_h.h"
+#include "protect_h.h"
+#include "utility.h"
 #include <unordered_set>
 
-void Inputs(Input* input)
+
+void protectInputs(ProtectInput* input_data)
 {
 	std::cout << "--------------Please note that the file must be in CSV format--------------\n" << std::endl;
 	std::cout << "Enter the file name with extention (Example.csv): ";
-	std::cin >> input->file_name;
-
+	input_data->file_name = getStrInput(std::cin);
+	
 
 	std::cout << "\nWhat file it is?" << std::endl;
 	std::cout << "1. Open" << std::endl;
 	std::cout << "2. Private" << std::endl;
 	std::cout << "3. Zeta" << std::endl;
 	std::cout << "Input: ";
-	std::cin >> std::setw(1) >> input->file_type;
+	input_data->file_type = getIntInput(std::cin);
 
-	while (!std::cin.good())
+	while (input_data->file_type < 1 || input_data->file_type > 3)
 	{
-		std::cout << "Wrong Input!\n";
-		std::cin.clear();
-		std::cin.ignore(INT_MAX, '\n');
+		std::cout << "Wrong file choice." << std::endl;
 		std::cout << "Input: ";
-		std::cin >> std::setw(1) >> input->file_type;
+		input_data->file_type = getIntInput(std::cin);
 	}
 
-	while (input->file_type < 1 || input->file_type > 3)
-	{
-		std::cout << "Wrong Input!\n";
-		std::cin.clear();
-		std::cin.ignore(INT_MAX, '\n');
-		std::cout << "Input: ";
-		std::cin >> std::setw(1) >> input->file_type;
-	}
 
 
 	std::cout << "\nChoose the separator value (for english Excell (comma) \",\" for russian (semicolon) \";\")\n";
 	std::cout << "1. Comma\n";
 	std::cout << "2. Semicolon\n";
 	std::cout << "Input: ";
-	std::cin >> input->separator_choice;
+	input_data->separator_choice = getIntInput(std::cin);
 
-	while (input->separator_choice < 1 || input->separator_choice > 2)
+	while (input_data->separator_choice < 1 || input_data->separator_choice > 2 )
 	{
-		std::cout << "Wrong Input!\n";
-		std::cin.clear();
-		std::cin.ignore(INT_MAX, '\n');
+		std::cout << "Wrong Input" << std::endl;
 		std::cout << "Input: ";
-		std::cin >> std::setw(1) >> input->file_type;
+		input_data->separator_choice = getIntInput(std::cin);
 	}
-	
-	if (input->separator_choice == 1)
+
+	if (input_data->separator_choice == 1)
 	{
-		input->separator = ',';
+		input_data->separator = ',';
 	}
 	else
 	{
-		input->separator = ';';
+		input_data->separator = ';';
 	}
 }
 
-bool makeFileNames(ReadyFileNames* names, int choice)
+bool protectMakeFileNames(ProtectReadyFileNames* names, int choice)
 {
 	
 	char buff[100];
@@ -68,7 +58,7 @@ bool makeFileNames(ReadyFileNames* names, int choice)
 	struct tm* time_data;
 	time_data = localtime(&calendar);
 
-	switch (choice)
+ 	switch (choice)
 	{
 	case 1:
 		strftime(buff, 80, "OpenProtectEmail_%d-%m-%Y.csv", time_data);
@@ -96,7 +86,7 @@ bool makeFileNames(ReadyFileNames* names, int choice)
 	return true;
 }
 
-void initData(Container* data, int num_of_elems)
+void protectInitData(ProtectContainer* data, int num_of_elems)
 {
 	num_of_elems--;
 
@@ -109,7 +99,7 @@ void initData(Container* data, int num_of_elems)
 	data->status.reserve(num_of_elems);
 }
 
-int getFileLength(std::ifstream* file)
+int protectGetFileLength(std::ifstream* file)
 {
 	int num_of_lines = 0;
 	while (!file->eof())
@@ -125,10 +115,10 @@ int getFileLength(std::ifstream* file)
 	return num_of_lines;
 }
 
-void switchParser(int* num, Container* data, std::string line)
+void protectSwitchParser(int* num, ProtectContainer* data, std::string line)
 {
-	enum FileColumnNumbers { affiliate_code = 11, finish_code = 14, is_lead = 27, is_sale = 28, submitted_email = 36, beacon_range = 41 };
-	enum TotalNumberOfColumnsInFile {total_columns = 41};
+	enum FileColumnNumbers { affiliate_code = 11, finish_code = 14, is_lead = 27, is_sale = 28, submitted_email = 37, beacon_range = 42 };
+	enum TotalNumberOfColumnsInFile {total_columns = 42};
 
 	if (*num >= total_columns)
 	{
@@ -163,7 +153,7 @@ void switchParser(int* num, Container* data, std::string line)
 	
 }
 
-void statusFiller(Container* data)
+void protectStatusFiller(ProtectContainer* data)
 {
 	for (int i = 0; i < data->affiliate_code.size() - 1; i++)
 	{
@@ -175,7 +165,7 @@ void statusFiller(Container* data)
 	}
 }
 
-void beaconRangeFormatting(Container* data)
+void protectBeaconRangeFormatting(ProtectContainer* data)
 {
 	for (int i = 0; i < data->beacon_range.size(); i++)
 	{
@@ -195,7 +185,7 @@ void beaconRangeFormatting(Container* data)
 	}
 }
 
-void affiliateCodeFormatting(Container* data)
+void protectAffiliateCodeFormatting(ProtectContainer* data)
 {
 	data->affiliate_code[0] = "LeadGUID";
 	
@@ -208,7 +198,7 @@ void affiliateCodeFormatting(Container* data)
 	}
 }
 
-void statusSetter(Container* data)
+void protectStatusSetter(ProtectContainer* data)
 {
 	for (int i = 1; i < data->affiliate_code.size(); i++)
 	{
@@ -252,7 +242,7 @@ void statusSetter(Container* data)
 	}
 }
 
-void removeDuplicates(Container* data)
+void protectRemoveDuplicates(ProtectContainer* data)
 {
 	std::unordered_set<std::string> s;
 
@@ -279,7 +269,7 @@ void removeDuplicates(Container* data)
 	}
 }
 
-void fileAssembly(Container* data, std::ofstream* emailFile, std::ofstream* guidFile)
+void protectFileAssembly(ProtectContainer* data, std::ofstream* emailFile, std::ofstream* guidFile)
 {
 
 	for (int i = 0; i < data->status.size(); i++)
@@ -294,6 +284,58 @@ void fileAssembly(Container* data, std::ofstream* emailFile, std::ofstream* guid
 			*emailFile << data->beacon_range[i] + ',' + data->status[i] + ',' + data->submitted_email[i] << std::endl;
 		}
 	}
+	emailFile->close();
+	guidFile->close();
 }
 
-	
+int protectRunDispo()
+{
+	ProtectContainer data;
+	ProtectReadyFileNames finish_names;
+	ProtectInput protect_input_data;
+
+	protectInputs(&protect_input_data);
+
+	std::ifstream dispoFile(protect_input_data.file_name);
+	if (!dispoFile.is_open())
+	{
+		system("CLS");
+		std::cerr << "\n\nFailed to open the file.\n" << std::endl;
+		return 1;
+	}
+
+	if (!fileValidity(&dispoFile, "Submitted Email"))
+	{
+		system("CLS");
+		std::cerr << "\n\nLooks like you've opened a wrong file.\n" << std::endl;
+		return 1;
+	}
+
+	int num_of_lines = protectGetFileLength(&dispoFile);
+	protectInitData(&data, num_of_lines);
+
+	int counter = 0;
+
+	while (!dispoFile.eof())
+	{
+		std::string line;
+		getline(dispoFile, line, protect_input_data.separator);
+		protectSwitchParser(&counter, &data, line);
+	}
+	dispoFile.close();
+
+	protectStatusFiller(&data);
+	protectBeaconRangeFormatting(&data);
+	protectAffiliateCodeFormatting(&data);
+	protectStatusSetter(&data);
+	protectRemoveDuplicates(&data);
+	protectMakeFileNames(&finish_names, protect_input_data.file_type);
+
+	std::ofstream emailFile(finish_names.email_name);
+	std::ofstream guidFile(finish_names.guid_name);
+
+	protectFileAssembly(&data, &emailFile, &guidFile);
+	system("CLS");
+	std::cout << "Protect is GUCCI.\n" << std::endl;
+	return 0;
+}

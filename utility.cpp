@@ -27,7 +27,6 @@ std::string getStrInput(std::istream& in)
 {
 	std::string str;
 	std::getline(in, str);
-
 	str.erase(str.find_last_not_of("\t\r\n\f\v") + 1);
 
 	std::istringstream sstr(str);
@@ -36,4 +35,22 @@ std::string getStrInput(std::istream& in)
 	if (!sstr.eof()) std::cin.setstate(std::ios::failbit);
 
 	return result;
+}
+
+bool fileValidity(std::ifstream* file, std::string checker_line)
+{
+	std::string line;
+	getline(*file, line);
+	if (line.find(checker_line) != std::string::npos)
+	{
+		file->clear();
+		file->seekg(0, std::ios::beg);
+		return true;
+	}
+	else
+	{
+		file->clear();
+		file->seekg(0, std::ios::beg);
+		return false;
+	}
 }

@@ -30,7 +30,6 @@ struct VivInput
 {
 	std::string file_name;
 	char separator = ',';
-
 };
 
 

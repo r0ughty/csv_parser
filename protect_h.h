@@ -31,11 +31,10 @@ struct ProtectInput
 {
 	std::string file_name;
 	char separator = ',';
-	int separator_choice;
-	int file_type;
+	int separator_choice = 0;
+	int file_type = 0;
 };
 
-int getIntInput(std::istream& in);
 void protectInputs(ProtectInput* input_data);
 bool protectMakeFileNames(ProtectReadyFileNames* names, int choice);
 int protectGetFileLength(std::ifstream* file);

@@ -1,17 +1,15 @@
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <string>
-#include <vector>
+
 #include "protect_util_h.h"
 #include "viv_util.h"
 #include "utility.h"
+#include "al_util.h"
 
 void menu()
 {
 	std::cout << "=======BEST MENU YOU'VE EVER SEEN=======\n" << std::endl;
-	std::cout << "1. Protect" << std::endl;
-	std::cout << "2. Vivint" << std::endl;
+	std::cout << "1. Alder" << std::endl;
+	std::cout << "2. Protect" << std::endl;
+	std::cout << "3. Vivint" << std::endl;
 	std::cout << "0. Exit" << std::endl;
 }
 
@@ -28,17 +26,22 @@ int main()
 		menu();
 		std::cout << "Input: ";
 		choice = getIntInput(std::cin);
-		while (choice < 0 || choice > 2)
+		while (choice < 0 || choice > 3)
 		{
+			std::cout << "Wrong input." << std::endl;
+			std::cout << "Input: ";
 			choice = getIntInput(std::cin);
 		}
 
 		switch (choice)
 		{
 		case 1:
-			protectRunDispo();
+			aldRunDispo();
 			break;
 		case 2:
+			protectRunDispo();			
+			break;
+		case 3:
 			vivRunDispo();
 			break;
 		case 0:

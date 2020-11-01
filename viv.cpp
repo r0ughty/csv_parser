@@ -1,5 +1,5 @@
 #define _CRT_SECURE_NO_WARNINGS
-#include "viv_util.h"
+#include "viv_h.h"
 #include "utility.h"
 #include <unordered_set>
 
@@ -284,6 +284,7 @@ void vivFileAssembly(VivContainer* data, std::ofstream* file)
 		}
 
 	}
+	file->close();
 }
 
 
@@ -298,10 +299,17 @@ int vivRunDispo()
 	std::ifstream dispoFile(viv_input_data.file_name);
 	if (!dispoFile.is_open())
 	{
-		std::cerr << "\n\nFailed to open the file." << std::endl;
+		system("CLS");
+		std::cerr << "\n\nFailed to open the file.\n" << std::endl;
 		return 1;
 	}
 
+	if (!fileValidity(&dispoFile, "SubID 4"))
+	{
+		system("CLS");
+		std::cerr << "\n\nLooks like you've opened a wrong file.\n" << std::endl;
+		return 1;
+	}
 
 	int num_of_lines = vivGetFileLength(&dispoFile);
 	vivInitData(&data, num_of_lines);
@@ -325,10 +333,9 @@ int vivRunDispo()
 	std::ofstream outFile(finish_names.name);
 
 	vivFileAssembly(&data, &outFile);
-	outFile.close();
 	system("CLS");
 
-	std::cout << "Vivint is GUCCI." << std::endl;
+	std::cout << "Vivint is GUCCI.\n" << std::endl;
 	
 	return 0;
 }
