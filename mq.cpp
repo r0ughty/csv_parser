@@ -194,7 +194,10 @@ void mqFileAssembly(MqContainer* data, std::ofstream* file)
 {
 	for (int i = 0; i < data->status.size(); i++)
 	{
-		*file << data->id[i] + ',' << data->status[i] + ',' << data->sms_valid[i] + ',' << data->email_valid[i] << std::endl;
+		if (data->id[i] != "")
+		{
+			*file << data->id[i] + ',' << data->status[i] + ',' << data->sms_valid[i] + ',' << data->email_valid[i] << std::endl;
+		}
 	}
 
 	file->close();
